@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <title>BudgetApp - logowanie</title>
+</head>
+<body>
+<div sec:authorize="isAnonymous()" class="container-fluid align-self-center mt-5 w-50">
+    <div class="jumbotron">
+        <p class="h2">Zaloguj się</p>
+        <hr class="my-4">
+        <form action="/start/login" method="post">
+            <th:block th:if="${param.error}">
+            <div th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'] != null &&
+                        session['SPRING_SECURITY_LAST_EXCEPTION'] instanceof
+                        T(org.springframework.security.authentication.DisabledException)}"
+                 class="alert alert-danger">
+                Twoje konto jest nieaktywne.<br>
+                Kliknij w link wysłany na twój adres email.
+            </div>
+            <div th:unless="${session['SPRING_SECURITY_LAST_EXCEPTION'] != null &&
+                        session['SPRING_SECURITY_LAST_EXCEPTION'] instanceof
+                        T(org.springframework.security.authentication.DisabledException)}"
+                 class="alert alert-danger">
+                Podałeś nieprawidłowy login lub hasło.
+            </div>
+            </th:block>
+            <div th:if="${param.logout}" class="alert alert-success">
+                Zostałeś poprawnie wylogowany.
+            </div>
+            <div th:if="${param.register}" class="alert alert-success">
+                Rejestracja zakończona. Teraz możesz się zalogować.
+            </div>
+            <div th:if="${param.confirm}" class="alert alert-success">
+                Na twój adres email został wysłany link aktywacyjny.<br>
+                Otwórz go aby dokończyć rejestrację.
+            </div>
+            <div class="form-group">
+                <label for="username">Podaj email</label>
+                <input type="email" class="form-control" name="username" id="username" aria-describedby="emailHelp" placeholder="Email">
+                <small id="usernameHelp" class="form-text text-muted">Wpisz adres email podany podczas rejestracji</small>
+            </div>
+            <div class="form-group">
+                <label for="password">Podaj hasło</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Hasło">
+            </div>
+            <hr class="my-4">
+            <button type="submit" class="btn btn-primary">Zaloguj</button>
+            <a class="btn btn-primary mb-4 float-right" role="button" href="/start/register">Rejestracja</a>
+        </form>
+
+    </div>
+</div>
+<div sec:authorize="isAuthenticated()" class="alert alert-danger container-fluid align-self-center mt-5 w-50" role="alert">
+    <p>Jesteś zalogowany jako: <span th:text="${#authentication.getPrincipal().getFirstName()}"></span>.</p>
+    <p>Aby się zalogować jako inny użytkownik najpierw musisz się wylogować.</p>
+    <a class="btn btn-danger" href="/start/logout">Wyloguj się</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <title>BudgetApp - rejestracja</title>
+</head>
+<body>
+    <div sec:authorize="isAnonymous()" class="container-fluid align-self-center mt-5 w-50">
+        <div class="jumbotron">
+            <p class="h2">Wypełnij formularz aby móc skorzystać z aplikacji</p>
+            <hr class="my-4">
+            <form action="/start/register" th:object="${user}" method="post">
+                <div class="form-group">
+                    <div th:if="${#fields.hasErrors('username')}" th:text="'Adres email jest niepoprawny lub jest już zarejestrowany.'"
+                          class="alert alert-danger" role="alert">Błędny email</div>
+                    <label for="email">Podaj email</label>
+                    <input type="email" th:field="${user.username}" id="email" placeholder="Email" class="form-control" required="required">
+                    <small id="email-help" class="form-text text-muted">Wpisz swój adres email.
+                        Będziesz go używał do logowania się w aplikacji</small>
+                </div>
+                <div class="form-group">
+                    <div th:if="${#fields.hasErrors('password')}" th:text="'Podane hasło nie spełnia wymagań.'"
+                          class="alert alert-danger" role="alert">Błędne hasło</div>
+                    <div th:if="${#fields.hasErrors('confirm')}" th:text="'Podane hasła muszą być identyczne'"
+                          class="alert alert-danger" role="alert">Hasła nie zgadzają się</div>
+                    <label for="first-name">Podaj hasło</label>
+                    <input type="password" th:field="${user.password}" id="password" placeholder="Hasło" class="form-control" required="required">
+                    <small id="password-help" class="form-text text-muted">
+                        Hasło musi się składać z 8-20 znaków, zawierać cyfry oraz małe i duże litery.
+                        Nie może zawierać białych znaków (np. spacji)</small>
+                </div>
+                <div class="form-group">
+                    <label for="first-name">Potwierdź hasło</label>
+                    <input type="password" th:field="${user.confirm}" id="confirm" placeholder="Hasło" class="form-control" required="required">
+                    <small id="confirm-help" class="form-text text-muted">Podane hasła muszą być identyczne.</small>
+                </div>
+                <div class="form-group">
+                    <div th:if="${#fields.hasErrors('firstName')}" th:text="'Podane imię jest niepoprawne.'"
+                          class="alert alert-danger" role="alert">Błędne imię</div>
+                    <label for="first-name">Jak masz na imię?</label>
+                    <input type="text" th:field="${user.firstName}" id="first-name" class="form-control" required="required">
+                </div>
+                <hr class="my-4">
+                <input type="submit" class="btn btn-primary" value="Zarejestruj się"/>
+            </form>
+        </div>
+    </div>
+    <div sec:authorize="isAuthenticated()" class="alert alert-danger container-fluid align-self-center mt-5 w-50" role="alert">
+        <p>Jesteś zalogowany jako: <span th:text="${#authentication.getPrincipal().getFirstName()}"></span>.</p>
+        <p>Aby zarejestrować nowego użytkownika musisz się wylogować.</p>
+        <a class="btn btn-danger" href="/start/logout">Wyloguj się</a>
+    </div>
+
+
+
+</body>
+</html>
